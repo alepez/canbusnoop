@@ -34,6 +34,8 @@ impl Display for Stats {
 
 impl Stats {
     fn push(&mut self, frame: tokio_socketcan::CANFrame) {
+        let id = frame.id();
+
         log::debug!("{:?}", &frame);
 
         let now = Instant::now();
@@ -55,7 +57,7 @@ impl Stats {
             );
         }
 
-        log::info!("{}", self);
+        log::info!("{:08X} {}", id, self);
     }
 }
 
