@@ -1,14 +1,41 @@
+use std::time::{Duration, Instant};
+
 use futures_util::stream::StreamExt;
 use tokio_socketcan::{CANSocket, Error};
 
-#[derive(Default)]
-struct Stats;
+#[derive(Default, Debug)]
+struct Stats {
+    count: usize,
+    last_time: Option<Instant>,
+    last_period: Option<Duration>,
+    min_period: Option<Duration>,
+    max_period: Option<Duration>,
+}
 
 impl Stats {
     fn push(&mut self, frame: tokio_socketcan::CANFrame) {
-        log::info!("{:?}", &frame);
-        let _data = frame.data();
-        let _id = frame.id();
+        log::debug!("{:?}", &frame);
+
+        let now = Instant::now();
+
+        self.count += 1;
+        self.last_period = self.last_time.map(|last_time| now - last_time);
+        self.last_time = Some(now);
+
+        if let Some(last_period) = self.last_period {
+            self.min_period = Some(
+                self.min_period
+                    .map(|x| x.min(last_period))
+                    .unwrap_or(last_period),
+            );
+            self.max_period = Some(
+                self.max_period
+                    .map(|x| x.max(last_period))
+                    .unwrap_or(last_period),
+            );
+        }
+
+        log::info!("{:?}", self);
     }
 }
 
