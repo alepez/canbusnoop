@@ -6,13 +6,29 @@ use std::{
 use futures_util::stream::StreamExt;
 use tokio_socketcan::{CANSocket, Error};
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 struct Stats {
+    started_at: Instant,
     count: usize,
     last_time: Option<Instant>,
     last_period: Option<Duration>,
     min_period: Option<Duration>,
     max_period: Option<Duration>,
+    throughput: f64,
+}
+
+impl Default for Stats {
+    fn default() -> Self {
+        Self {
+            started_at: Instant::now(),
+            count: Default::default(),
+            last_time: Default::default(),
+            last_period: Default::default(),
+            min_period: Default::default(),
+            max_period: Default::default(),
+            throughput: 0.,
+        }
+    }
 }
 
 fn fmt_period(x: Duration) -> String {
@@ -23,11 +39,12 @@ impl Display for Stats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "({:10}, {:10}, {:10}, {:10})",
+            "({:10}, {:10}, {:10}, {:10}, {:10.1})",
             self.count,
             self.last_period.map(fmt_period).unwrap_or_default(),
             self.min_period.map(fmt_period).unwrap_or_default(),
             self.max_period.map(fmt_period).unwrap_or_default(),
+            self.throughput,
         )
     }
 }
@@ -56,6 +73,8 @@ impl Stats {
                     .unwrap_or(last_period),
             );
         }
+
+        self.throughput = (self.count as f64) / (now - self.started_at).as_secs_f64();
 
         log::info!("{:08X} {}", id, self);
     }
