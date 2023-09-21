@@ -63,7 +63,14 @@ impl Stats {
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-    env_logger::init();
+    {
+        use env_logger::{Builder, Target};
+
+        let mut builder = Builder::from_default_env();
+        builder.format_timestamp_millis();
+        builder.target(Target::Stdout);
+        builder.init();
+    }
 
     let mut socket_rx = CANSocket::open("can0")?;
     let mut stats = Stats::default();
