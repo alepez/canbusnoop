@@ -1,4 +1,7 @@
-use std::time::{Duration, Instant};
+use std::{
+    fmt::Display,
+    time::{Duration, Instant},
+};
 
 use futures_util::stream::StreamExt;
 use tokio_socketcan::{CANSocket, Error};
@@ -10,6 +13,23 @@ struct Stats {
     last_period: Option<Duration>,
     min_period: Option<Duration>,
     max_period: Option<Duration>,
+}
+
+fn fmt_period(x: Duration) -> String {
+    format!("{:?}", x)
+}
+
+impl Display for Stats {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "({:10}, {:10}, {:10}, {:10})",
+            self.count,
+            self.last_period.map(fmt_period).unwrap_or_default(),
+            self.min_period.map(fmt_period).unwrap_or_default(),
+            self.max_period.map(fmt_period).unwrap_or_default(),
+        )
+    }
 }
 
 impl Stats {
@@ -35,7 +55,7 @@ impl Stats {
             );
         }
 
-        log::info!("{:?}", self);
+        log::info!("{}", self);
     }
 }
 
