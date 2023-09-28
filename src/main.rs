@@ -161,7 +161,9 @@ fn calculate_jitter<'a>(mut periods: impl Iterator<Item = &'a Duration>) -> f64 
     }
     // Calculate the average absolute difference
     let sum: f64 = differences.iter().sum();
-    if differences.is_empty() { return 0.0 }
+    if differences.is_empty() {
+        return 0.0;
+    }
     let average_difference = sum / (differences.len() as f64);
     // Calculate and return the jitter value
     average_difference
