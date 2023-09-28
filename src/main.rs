@@ -1,4 +1,5 @@
 use std::{
+    collections::HashMap,
     fmt::Display,
     time::{Duration, Instant},
 };
@@ -32,14 +33,14 @@ impl Default for Stats {
 }
 
 fn fmt_period(x: Duration) -> String {
-    format!("{:?}", x)
+    format!("{:6?}", x)
 }
 
 impl Display for Stats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "({:10}, {:10}, {:10}, {:10}, {:10.1})",
+            "({:6}, {:6}, {:6}, {:6}, {:6.1})",
             self.count,
             self.last_period.map(fmt_period).unwrap_or_default(),
             self.min_period.map(fmt_period).unwrap_or_default(),
@@ -76,8 +77,37 @@ impl Stats {
 
         self.throughput = (self.count as f64) / (now - self.started_at).as_secs_f64();
 
-        log::info!("{:08X} {}", id, self);
+        println!("{:08X} {}", id, self);
     }
+}
+
+#[derive(Debug, Default)]
+struct MultiStats {
+    stats: HashMap<u32, Stats>,
+}
+
+impl MultiStats {
+    fn push(&mut self, frame: tokio_socketcan::CANFrame) {
+        let id = frame.id();
+
+        let s = self.stats.get_mut(&id);
+        if let Some(s) = s {
+            s.push(frame)
+        } else {
+            let mut s = Stats::default();
+            s.push(frame);
+            self.stats.insert(id, s);
+        };
+    }
+}
+
+fn filter_id(id: u32, expected_id: u32) -> bool {
+    id == expected_id
+}
+
+fn filter_src(id: u32, expected_src: u32) -> bool {
+    let src = id & 0xFF;
+    src == expected_src
 }
 
 #[tokio::main]
@@ -92,10 +122,16 @@ async fn main() -> Result<(), Error> {
     }
 
     let mut socket_rx = CANSocket::open("can0")?;
-    let mut stats = Stats::default();
+    // let mut stats = Stats::default();
+    let mut stats = MultiStats::default();
 
     while let Some(Ok(frame)) = socket_rx.next().await {
-        stats.push(frame);
+        let id = frame.id();
+        if filter_src(id, 23) {
+        // if filter_id(id, 0x09F11917) {
+            stats.push(frame);
+        }
     }
+
     Ok(())
 }
