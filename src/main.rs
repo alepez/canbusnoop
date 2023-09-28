@@ -123,7 +123,10 @@ impl MultiStats {
 
 impl Display for MultiStats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for (k, v) in &self.stats {
+        let stats = &self.stats;
+        let mut stats: Vec<_> = stats.into_iter().collect();
+        stats.sort_by_key(|(&k, _)| k);
+        for (k, v) in stats {
             let _ = writeln!(f, "0x{:08X} {}", k, v);
         }
         Ok(())
