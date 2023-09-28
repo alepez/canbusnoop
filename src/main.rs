@@ -1,5 +1,7 @@
+#![allow(dead_code)]
+
 use std::{
-    collections::HashMap,
+    collections::{HashMap, VecDeque},
     fmt::Display,
     time::{Duration, Instant},
 };
@@ -15,7 +17,9 @@ struct Stats {
     last_period: Option<Duration>,
     min_period: Option<Duration>,
     max_period: Option<Duration>,
+    avg_period: Option<Duration>,
     throughput: f64,
+    period_history: VecDeque<Duration>,
 }
 
 impl Default for Stats {
@@ -27,7 +31,9 @@ impl Default for Stats {
             last_period: Default::default(),
             min_period: Default::default(),
             max_period: Default::default(),
+            avg_period: Default::default(),
             throughput: 0.,
+            period_history: Default::default(),
         }
     }
 }
@@ -41,11 +47,12 @@ impl Display for Stats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "({:6}, {:6}, {:6}, {:6}, {:6.1})",
+            "({:6}, {:6}, {:6}, {:6}, {:6}, {:6.1})",
             self.count,
             self.last_period.map(fmt_period).unwrap_or_default(),
             self.min_period.map(fmt_period).unwrap_or_default(),
             self.max_period.map(fmt_period).unwrap_or_default(),
+            self.avg_period.map(fmt_period).unwrap_or_default(),
             self.throughput,
         )
     }
@@ -53,8 +60,6 @@ impl Display for Stats {
 
 impl Stats {
     fn push(&mut self, frame: tokio_socketcan::CANFrame) {
-        let id = frame.id();
-
         log::debug!("{:?}", &frame);
 
         let now = Instant::now();
@@ -74,6 +79,22 @@ impl Stats {
                     .map(|x| x.max(last_period))
                     .unwrap_or(last_period),
             );
+
+            if self.period_history.len() > 10 {
+                self.period_history.pop_back();
+            }
+
+            self.period_history.push_back(last_period);
+
+            if !self.period_history.is_empty() {
+                let sum: u64 = self
+                    .period_history
+                    .iter()
+                    .map(|x| x.as_millis() as u64)
+                    .sum();
+                let n: u64 = self.period_history.len() as _;
+                self.avg_period = Some(Duration::from_millis(sum / n));
+            }
         }
 
         self.throughput = (self.count as f64) / (now - self.started_at).as_secs_f64();
