@@ -20,6 +20,7 @@ struct Stats {
     avg_period: Option<Duration>,
     throughput: f64,
     period_history: VecDeque<Duration>,
+    period_jitter: f64,
 }
 
 impl Default for Stats {
@@ -34,6 +35,7 @@ impl Default for Stats {
             avg_period: Default::default(),
             throughput: 0.,
             period_history: Default::default(),
+            period_jitter: 0.,
         }
     }
 }
@@ -47,13 +49,14 @@ impl Display for Stats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "({:6}, {:6}, {:6}, {:6}, {:6}, {:6.1})",
+            "({:6}, {:6}, {:6}, {:6}, {:6}, {:6.1}, {:6.1}%)",
             self.count,
             self.last_period.map(fmt_period).unwrap_or_default(),
             self.min_period.map(fmt_period).unwrap_or_default(),
             self.max_period.map(fmt_period).unwrap_or_default(),
             self.avg_period.map(fmt_period).unwrap_or_default(),
             self.throughput,
+            self.period_jitter * 100.,
         )
     }
 }
@@ -98,6 +101,7 @@ impl Stats {
         }
 
         self.throughput = (self.count as f64) / (now - self.started_at).as_secs_f64();
+        self.period_jitter = calculate_jitter(self.period_history.iter());
     }
 }
 
@@ -140,6 +144,27 @@ fn filter_id(id: u32, expected_id: u32) -> bool {
 fn filter_src(id: u32, expected_src: u32) -> bool {
     let src = id & 0xFF;
     src == expected_src
+}
+
+fn calculate_jitter<'a>(mut periods: impl Iterator<Item = &'a Duration>) -> f64 {
+    let mut previous_period = match periods.next() {
+        Some(period) => period.as_secs_f64(),
+        None => return 0.0, // Return 0 if there are no periods
+    };
+    let mut differences = Vec::new();
+    // Calculate the differences between adjacent periods
+    for period in periods {
+        let period = period.as_secs_f64();
+        let difference = (period - previous_period).abs();
+        differences.push(difference);
+        previous_period = period;
+    }
+    // Calculate the average absolute difference
+    let sum: f64 = differences.iter().sum();
+    if differences.is_empty() { return 0.0 }
+    let average_difference = sum / (differences.len() as f64);
+    // Calculate and return the jitter value
+    average_difference
 }
 
 #[tokio::main]
