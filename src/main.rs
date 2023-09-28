@@ -33,7 +33,8 @@ impl Default for Stats {
 }
 
 fn fmt_period(x: Duration) -> String {
-    format!("{:6?}", x)
+    let ms = x.as_millis();
+    format!("{:6?}", ms)
 }
 
 impl Display for Stats {
@@ -76,8 +77,6 @@ impl Stats {
         }
 
         self.throughput = (self.count as f64) / (now - self.started_at).as_secs_f64();
-
-        println!("{:08X} {}", id, self);
     }
 }
 
@@ -98,6 +97,15 @@ impl MultiStats {
             s.push(frame);
             self.stats.insert(id, s);
         };
+    }
+}
+
+impl Display for MultiStats {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for (k, v) in &self.stats {
+            let _ = writeln!(f, "0x{:08} {}", k, v);
+        }
+        Ok(())
     }
 }
 
@@ -128,8 +136,11 @@ async fn main() -> Result<(), Error> {
     while let Some(Ok(frame)) = socket_rx.next().await {
         let id = frame.id();
         if filter_src(id, 23) {
-        // if filter_id(id, 0x09F11917) {
+            // if filter_id(id, 0x09F11917) {
             stats.push(frame);
+
+            print!("\x1B[2J\x1B[1;1H");
+            println!("{}", stats);
         }
     }
 
