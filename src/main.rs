@@ -103,7 +103,7 @@ impl MultiStats {
 impl Display for MultiStats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for (k, v) in &self.stats {
-            let _ = writeln!(f, "0x{:08} {}", k, v);
+            let _ = writeln!(f, "0x{:08X} {}", k, v);
         }
         Ok(())
     }
