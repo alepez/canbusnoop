@@ -45,16 +45,37 @@ fn fmt_period(x: Duration) -> String {
     format!("{:6?}", ms)
 }
 
+struct Spinner(usize);
+
+impl Display for Spinner {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let c = match self.0 % 4 {
+            0 => '|',
+            1 => '/',
+            2 => '-',
+            3 => '\\',
+            _ => unreachable!(),
+        };
+        write!(f, "{}", c)
+    }
+}
+
 impl Display for Stats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let spinner = Spinner(self.count);
         write!(
             f,
-            "({:6}, {:6}, {:6}, {:6}, {:6}, {:6.1}, {:6.1}%)",
+            "({} {:6}, {:6}, {:6}, {:6}, {:6}, {:6.1}Hz, {:6.1}, {:6.1}%)",
+            spinner,
             self.count,
             self.last_period.map(fmt_period).unwrap_or_default(),
             self.min_period.map(fmt_period).unwrap_or_default(),
             self.max_period.map(fmt_period).unwrap_or_default(),
             self.avg_period.map(fmt_period).unwrap_or_default(),
+            self.avg_period
+                .map(|x| x.as_secs_f64())
+                .and_then(|s| if s != 0. { Some(1. / (s as f64)) } else { None })
+                .unwrap_or_default(),
             self.throughput,
             self.period_jitter * 100.,
         )
@@ -131,7 +152,11 @@ impl Display for MultiStats {
         let mut stats: Vec<_> = stats.into_iter().collect();
         stats.sort_by_key(|(&k, _)| k);
         for (k, v) in stats {
-            let _ = writeln!(f, "0x{:08X} {}", k, v);
+            let data_page = (k >> 24) & 1;
+            let pdu_format = (k >> 16) & 0xFF;
+            let pdu_specific = (k >> 8) & 0xFF;
+            let pgn = (data_page << 16) + (pdu_format << 8) + pdu_specific;
+            let _ = writeln!(f, "0x{:08X} PGN={:8} {}", k, pgn, v);
         }
         Ok(())
     }
