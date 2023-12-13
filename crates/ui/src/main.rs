@@ -6,8 +6,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use futures_util::stream::StreamExt;
-use tokio_socketcan::{CANSocket, Error};
+use canbusnoop_bus::{CanBusReader, Config, Frame};
 
 #[derive(Debug)]
 struct Stats {
@@ -83,7 +82,7 @@ impl Display for Stats {
 }
 
 impl Stats {
-    fn push(&mut self, frame: tokio_socketcan::CANFrame) {
+    fn push(&mut self, frame: Frame) {
         log::debug!("{:?}", &frame);
 
         let now = Instant::now();
@@ -132,7 +131,7 @@ struct MultiStats {
 }
 
 impl MultiStats {
-    fn push(&mut self, frame: tokio_socketcan::CANFrame) {
+    fn push(&mut self, frame: Frame) {
         let id = frame.id();
 
         let s = self.stats.get_mut(&id);
@@ -195,7 +194,7 @@ fn calculate_jitter<'a>(mut periods: impl Iterator<Item = &'a Duration>) -> f64 
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     {
         use env_logger::{Builder, Target};
 
@@ -205,11 +204,13 @@ async fn main() -> Result<(), Error> {
         builder.init();
     }
 
-    let mut socket_rx = CANSocket::open("can0")?;
+    let config = Config::new_socket_can("can0".to_string());
+    let mut reader = CanBusReader::new(config)?;
+
     // let mut stats = Stats::default();
     let mut stats = MultiStats::default();
 
-    while let Some(Ok(frame)) = socket_rx.next().await {
+    while let Some(frame) = reader.read().await {
         let id = frame.id();
         if filter_src(id, 23) {
             // if filter_id(id, 0x09F11917) {
