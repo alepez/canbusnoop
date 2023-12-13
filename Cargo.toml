@@ -11,6 +11,11 @@ license = "MIT/Apache-2.0"
 keywords = ["can", "socketcan", "sniffer"]
 rust-version = "1.74.0"
 
+[[bin]]
+bench = false
+path = "crates/ui/src/main.rs"
+name = "canbusnoop"
+
 [dependencies]
 futures-util = "0.3"
 tokio-socketcan = "0.3"
