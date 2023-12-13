@@ -1,7 +1,14 @@
 [package]
 name = "canbusnoop"
 version = "0.1.0"
+authors = ["Alessandro Pezzato <alessandro@pezzato.net>"]
 edition = "2021"
+description = "CAN bus sniffer"
+homepage = "https://github.com/alepez/canbusnoop"
+repository = "https://github.com/alepez/canbusnoop"
+readme = "README.md"
+license = "MIT/Apache-2.0"
+keywords = ["can", "socketcan", "sniffer"]
 
 [dependencies]
 futures-util = "0.3"
