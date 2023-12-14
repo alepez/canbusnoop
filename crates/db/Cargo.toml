@@ -1,26 +1,13 @@
 [package]
-name = "canbusnoop"
+name = "canbusnoop-db"
 version = "0.1.0"
 authors = ["Alessandro Pezzato <alessandro@pezzato.net>"]
 edition = "2021"
-description = "CAN bus sniffer"
+description = "CAN bus sniffer - database"
 homepage = "https://github.com/alepez/canbusnoop"
 repository = "https://github.com/alepez/canbusnoop"
-readme = "README.md"
 license = "MIT/Apache-2.0"
 keywords = ["can", "socketcan", "sniffer"]
-rust-version = "1.74.0"
-
-[[bin]]
-bench = false
-path = "crates/ui/src/main.rs"
-name = "canbusnoop"
-
-[workspace]
-members = [
-  "crates/bus",
-  "crates/db",
-]
 
 [dependencies]
 futures-util = "0.3"
@@ -30,5 +17,8 @@ tokio-stream = { version = "0.1" }
 tokio-util = { version = "0.7", features = ["codec"] }
 log = "0.4"
 env_logger = "*"
-canbusnoop-bus = { path = "crates/bus" }
-canbusnoop-db = { path = "crates/db" }
+anyhow = "1.0.75"
+thiserror = "1.0.50"
+
+# TODO
+canbusnoop-bus = { path = "../../crates/bus" }
