@@ -19,3 +19,4 @@ log = "0.4"
 env_logger = "*"
 anyhow = "1.0.75"
 thiserror = "1.0.50"
+canbusnoop-core = { path = "../../crates/core" }

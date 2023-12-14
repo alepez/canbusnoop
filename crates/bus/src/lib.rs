@@ -1,4 +1,5 @@
 use anyhow::Result;
+use canbusnoop_core::Frame;
 use tokio_socketcan::{CANFrame, CANSocket};
 use tokio_stream::StreamExt;
 
@@ -15,9 +16,9 @@ pub struct CanBusReader {
 impl CanBusReader {
     pub fn new(config: Config) -> Result<CanBusReader> {
         let inner = match config {
-            Config::SocketCan(socket_can_config) => InnerCanBusReader::SocketCan(
-                SocketCanBusReader::new(socket_can_config)?,
-            ),
+            Config::SocketCan(socket_can_config) => {
+                InnerCanBusReader::SocketCan(SocketCanBusReader::new(socket_can_config)?)
+            }
         };
         Ok(CanBusReader { inner })
     }
@@ -59,38 +60,11 @@ impl SocketCanBusReader {
 
     async fn read(&mut self) -> Option<Frame> {
         let frame = self.socket.next().await;
-        let frame: Frame = frame?.ok()?.into();
+        let frame: Frame = socket_can_frame_to_frame(frame?.ok()?);
         Some(frame)
     }
 }
 
-/// CAN Frame
-#[derive(Debug)]
-pub struct Frame {
-    /// 32 bit CAN_ID + EFF/RTR/ERR flags
-    id: u32,
-
-    /// buffer for data
-    data: Vec<u8>,
-}
-
-impl Frame {
-    /// Returns the 32 bit CAN_ID + EFF/RTR/ERR flags
-    pub fn id(&self) -> u32 {
-        self.id
-    }
-
-    /// Returns the data
-    pub fn data(&self) -> &[u8] {
-        &self.data
-    }
-}
-
-impl From<CANFrame> for Frame {
-    fn from(frame: CANFrame) -> Self {
-        Frame {
-            id: frame.id(),
-            data: frame.data().to_vec(),
-        }
-    }
+fn socket_can_frame_to_frame(frame: CANFrame) -> Frame {
+    Frame::new(frame.id(), frame.data().to_vec())
 }

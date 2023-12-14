@@ -1,7 +1,7 @@
-use canbusnoop_bus::Frame;
 use std::collections::{HashMap, VecDeque};
 use std::fmt::Display;
 use std::time::{Duration, Instant};
+use canbusnoop_core::Frame;
 
 #[derive(Debug)]
 struct Stats {

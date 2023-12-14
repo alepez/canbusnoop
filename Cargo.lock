@@ -82,6 +82,7 @@ name = "canbusnoop"
 version = "0.1.0"
 dependencies = [
  "canbusnoop-bus",
+ "canbusnoop-core",
  "canbusnoop-db",
  "env_logger",
  "futures-util",
@@ -94,6 +95,22 @@ dependencies = [
 
 [[package]]
 name = "canbusnoop-bus"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "canbusnoop-core",
+ "env_logger",
+ "futures-util",
+ "log",
+ "thiserror",
+ "tokio",
+ "tokio-socketcan",
+ "tokio-stream",
+ "tokio-util",
+]
+
+[[package]]
+name = "canbusnoop-core"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -112,7 +129,7 @@ name = "canbusnoop-db"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "canbusnoop-bus",
+ "canbusnoop-core",
  "env_logger",
  "futures-util",
  "log",

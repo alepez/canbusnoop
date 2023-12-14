@@ -21,4 +21,4 @@ anyhow = "1.0.75"
 thiserror = "1.0.50"
 
 # TODO
-canbusnoop-bus = { path = "../../crates/bus" }
+canbusnoop-core = { path = "../../crates/core" }
