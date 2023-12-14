@@ -10,12 +10,3 @@ license = "MIT/Apache-2.0"
 keywords = ["can", "socketcan", "sniffer"]
 
 [dependencies]
-futures-util = "0.3"
-tokio-socketcan = "0.3"
-tokio = { version = "1", features = ["full"] }
-tokio-stream = { version = "0.1" }
-tokio-util = { version = "0.7", features = ["codec"] }
-log = "0.4"
-env_logger = "*"
-anyhow = "1.0.75"
-thiserror = "1.0.50"

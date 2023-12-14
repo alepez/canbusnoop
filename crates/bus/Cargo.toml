@@ -16,7 +16,6 @@ tokio = { version = "1", features = ["full"] }
 tokio-stream = { version = "0.1" }
 tokio-util = { version = "0.7", features = ["codec"] }
 log = "0.4"
-env_logger = "*"
-anyhow = "1.0.75"
-thiserror = "1.0.50"
+anyhow = "1"
+thiserror = "1"
 canbusnoop-core = { path = "../../crates/core" }
