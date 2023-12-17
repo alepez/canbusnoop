@@ -30,6 +30,7 @@ impl CanBusReader {
     }
 }
 
+#[derive(Debug)]
 pub enum Config {
     SocketCan(SocketCanConfig),
 }
@@ -40,6 +41,7 @@ impl Config {
     }
 }
 
+#[derive(Debug)]
 pub struct SocketCanConfig {
     interface: String,
 }
