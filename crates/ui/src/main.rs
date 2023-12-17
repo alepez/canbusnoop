@@ -8,7 +8,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::new_socket_can("can0".to_string());
     let mut reader = CanBusReader::new(config)?;
 
-    // let mut stats = Stats::default();
     let mut stats = MultiStats::default();
 
     while let Some(frame) = reader.read().await {
