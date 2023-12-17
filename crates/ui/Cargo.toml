@@ -22,4 +22,4 @@ canbusnoop-bus = { path = "../bus" }
 canbusnoop-core = { path = "../core" }
 canbusnoop-db = { path = "../db" }
 dioxus = "0.4.3"
-dioxus-tui = "0.4.3"
+dioxus-desktop = "0.4.3"
