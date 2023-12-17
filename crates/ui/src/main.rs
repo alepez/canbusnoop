@@ -14,7 +14,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     while let Some(frame) = reader.read().await {
         stats.push(frame);
 
-        print!("\x1B[2J\x1B[1;1H");
+        clear_screen();
         println!("{}", stats);
     }
 
@@ -28,4 +28,8 @@ fn setup_env_logger() {
     builder.format_timestamp_millis();
     builder.target(Target::Stdout);
     builder.init();
+}
+
+fn clear_screen() {
+    print!("\x1B[2J\x1B[1;1H");
 }
