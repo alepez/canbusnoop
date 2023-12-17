@@ -2,9 +2,10 @@
 
 use canbusnoop_bus::{CanBusReader, Config};
 use canbusnoop_db::*;
+use canbusnoop_ui::launch;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn _main() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::new_socket_can("can0".to_string());
     let mut reader = CanBusReader::new(config)?;
 
@@ -16,6 +17,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         clear_screen();
         println!("{}", stats);
     }
+
+    Ok(())
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    setup_env_logger();
+    launch();
 
     Ok(())
 }
