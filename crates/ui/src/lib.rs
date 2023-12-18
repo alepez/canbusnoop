@@ -111,12 +111,18 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     let max_period = stats.max_period().map(fmt_period).unwrap_or_default();
     let avg_period = stats.avg_period().map(fmt_period).unwrap_or_default();
 
-    let avg_freq = stats
-        .avg_period()
-        .map(|x| x.as_secs_f64())
-        .and_then(|s| if s != 0. { Some(1. / (s as f64)) } else { None })
-        .unwrap_or_default();
-    let avg_freq = format!("{:.2}", avg_freq);
+    let avg_freq = stats.avg_period().map(|x| x.as_secs_f64()).and_then(|s| {
+        if s != 0. {
+            Some(1. / (s as f64))
+        } else {
+            None
+        }
+    });
+
+    let avg_freq = match avg_freq {
+        Some(avg_freq) => format!("{:.2}", avg_freq),
+        None => "".to_string(),
+    };
 
     let throughput = stats.throughput();
     let throughput = format!("{:.2}", throughput);

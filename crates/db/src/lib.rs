@@ -126,7 +126,11 @@ impl Stats {
         }
 
         let time_since_start = now - self.started_at;
-        self.throughput = (self.count as f64) / time_since_start.as_secs_f64();
+        self.throughput = match self.count {
+            0 => 0.,
+            1 => 1.,
+            _ => self.count as f64 / time_since_start.as_secs_f64(),
+        };
 
         self.period_jitter = calculate_jitter(self.period_history.iter());
     }
