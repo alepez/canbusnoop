@@ -19,12 +19,16 @@ pub fn launch(rx_receiver: UnboundedReceiver<Frame>) {
 }
 
 fn App(cx: Scope<AppProps>) -> Element {
+    let count = use_state(cx, || 0);
+
     let _ = use_coroutine(cx, |_: UnboundedReceiver<()>| {
         let receiver = cx.props.rx_receiver.take();
+        to_owned![count];
         async move {
             if let Some(mut receiver) = receiver {
                 while let Some(msg) = receiver.next().await {
                     info!("Received: {:?}", msg);
+                    count += 1;
                 }
             }
         }
@@ -32,7 +36,7 @@ fn App(cx: Scope<AppProps>) -> Element {
 
     cx.render(rsx! {
         div {
-            "Ciao!"
+            "Count: {count}"
         }
     })
 }
