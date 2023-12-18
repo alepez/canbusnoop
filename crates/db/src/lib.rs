@@ -4,7 +4,7 @@ use std::fmt::Display;
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone, PartialEq)]
-struct Stats {
+pub struct Stats {
     started_at: Instant,
     count: usize,
     last_time: Option<Instant>,
@@ -15,6 +15,36 @@ struct Stats {
     throughput: f64,
     period_history: VecDeque<Duration>,
     period_jitter: f64,
+}
+
+impl Stats {
+    pub fn count(&self) -> usize {
+        self.count
+    }
+
+    pub fn last_period(&self) -> Option<Duration> {
+        self.last_period
+    }
+
+    pub fn min_period(&self) -> Option<Duration> {
+        self.min_period
+    }
+
+    pub fn max_period(&self) -> Option<Duration> {
+        self.max_period
+    }
+
+    pub fn avg_period(&self) -> Option<Duration> {
+        self.avg_period
+    }
+
+    pub fn throughput(&self) -> f64 {
+        self.throughput
+    }
+
+    pub fn period_jitter(&self) -> f64 {
+        self.period_jitter
+    }
 }
 
 impl Default for Stats {
@@ -124,6 +154,10 @@ impl MultiStats {
 
     pub fn count(&self) -> usize {
         self.total_count
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = (&u32, &Stats)> {
+        self.stats.iter()
     }
 }
 
