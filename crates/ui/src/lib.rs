@@ -7,7 +7,6 @@ use dioxus_desktop::Config;
 use futures::StreamExt;
 use std::cell::Cell;
 use std::time::Duration;
-use dioxus::html::style;
 
 struct AppProps {
     rx_receiver: Cell<Option<UnboundedReceiver<Frame>>>,
@@ -80,7 +79,7 @@ fn Stats(cx: Scope<StatsProps>) -> Element {
                     th { text_align: "right", "(ms)" }
                     th { text_align: "right", "(ms)" }
                     th { text_align: "right", "(Hz)" }
-                    th { text_align: "right", "" }
+                    th { text_align: "right", "(Hz)" }
                     th { text_align: "right", "%" }
                 }
             }
