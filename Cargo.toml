@@ -37,3 +37,4 @@ canbusnoop-core = { path = "crates/core" }
 canbusnoop-db = { path = "crates/db" }
 canbusnoop-ui = { path = "crates/ui" }
 futures-channel = "0.3.29"
+clap = { version = "4.4.11", features = ["derive"] }

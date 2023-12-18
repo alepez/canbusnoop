@@ -3,12 +3,14 @@
 use canbusnoop_bus::{CanBusReader, Config};
 use canbusnoop_core::Frame;
 use canbusnoop_ui::launch;
+use clap::Parser;
 use futures_channel::mpsc::{unbounded, UnboundedSender};
 
 async fn can_read_task(
+    can_interface: String,
     rx_sender: UnboundedSender<Frame>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let config = Config::new_socket_can("can0".to_string());
+    let config = Config::new_socket_can(can_interface);
     let mut reader = CanBusReader::new(config)?;
 
     while let Some(frame) = reader.read().await {
@@ -18,23 +20,26 @@ async fn can_read_task(
     Ok(())
 }
 
-fn can_read_thread_fun(rx_sender: UnboundedSender<Frame>) {
+fn can_read_thread_fun(can_interface: String, rx_sender: UnboundedSender<Frame>) {
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
         .unwrap()
         .block_on(async {
-            can_read_task(rx_sender).await.unwrap();
+            can_read_task(can_interface, rx_sender).await.unwrap();
         })
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let cli = Cli::parse();
+    let can_interface = cli.can_interface;
+
     setup_env_logger();
 
     let (rx_sender, rx_receiver) = unbounded::<Frame>();
 
     std::thread::spawn(move || {
-        let _ = can_read_thread_fun(rx_sender);
+        let _ = can_read_thread_fun(can_interface, rx_sender);
     });
 
     launch(rx_receiver);
@@ -51,6 +56,10 @@ fn setup_env_logger() {
     builder.init();
 }
 
-fn clear_screen() {
-    print!("\x1B[2J\x1B[1;1H");
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Cli {
+    /// CAN bus interface
+    #[arg(short = 'i', long, default_value = "can0")]
+    can_interface: String,
 }
