@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 use canbusnoop_core::Frame;
+use canbusnoop_db::MultiStats;
 use dioxus::prelude::*;
 use dioxus_desktop::Config;
 use futures::StreamExt;
@@ -19,20 +20,22 @@ pub fn launch(rx_receiver: UnboundedReceiver<Frame>) {
 }
 
 fn App(cx: Scope<AppProps>) -> Element {
-    let count = use_state(cx, || 0);
+    let stats = use_ref(cx, || MultiStats::default());
 
     let _ = use_coroutine(cx, |_: UnboundedReceiver<()>| {
         let receiver = cx.props.rx_receiver.take();
-        to_owned![count];
+        to_owned![stats];
         async move {
             if let Some(mut receiver) = receiver {
                 while let Some(msg) = receiver.next().await {
-                    info!("Received: {:?}", msg);
-                    count += 1;
+                    let msg: Frame = msg;
+                    stats.write().push(msg);
                 }
             }
         }
     });
+
+    let count = stats.read().count();
 
     cx.render(rsx! {
         div {

@@ -1,7 +1,7 @@
+use canbusnoop_core::Frame;
 use std::collections::{HashMap, VecDeque};
 use std::fmt::Display;
 use std::time::{Duration, Instant};
-use canbusnoop_core::Frame;
 
 #[derive(Debug)]
 struct Stats {
@@ -103,10 +103,13 @@ impl Stats {
 #[derive(Debug, Default)]
 pub struct MultiStats {
     stats: HashMap<u32, Stats>,
+    total_count: usize,
 }
 
 impl MultiStats {
     pub fn push(&mut self, frame: Frame) {
+        self.total_count += 1;
+
         let id = frame.id();
 
         let s = self.stats.get_mut(&id);
@@ -117,6 +120,10 @@ impl MultiStats {
             s.push(frame);
             self.stats.insert(id, s);
         };
+    }
+
+    pub fn count(&self) -> usize {
+        self.total_count
     }
 }
 
