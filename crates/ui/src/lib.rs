@@ -62,15 +62,15 @@ fn Stats(cx: Scope<StatsProps>) -> Element {
             width: "100%",
             thead {
                 tr {
-                    th { text_align: "right", "ID" }
-                    th { text_align: "right", "Count" }
-                    th { text_align: "right", "Last" }
-                    th { text_align: "right", "Min" }
-                    th { text_align: "right", "Max" }
-                    th { text_align: "right", "Avg" }
-                    th { text_align: "right", "Freq" }
-                    th { text_align: "right", "Throughput" }
-                    th { text_align: "right", "Jitter" }
+                    th { width: "20%", text_align: "right", "ID" }
+                    th { width: "10%", text_align: "right", "Count" }
+                    th { width: "10%", text_align: "right", "Last" }
+                    th { width: "10%", text_align: "right", "Min" }
+                    th { width: "10%", text_align: "right", "Max" }
+                    th { width: "10%", text_align: "right", "Avg" }
+                    th { width: "10%", text_align: "right", "Freq" }
+                    th { width: "10%", text_align: "right", "Throughput" }
+                    th { width: "10%", text_align: "right", "Jitter" }
                 }
                 tr {
                     th { text_align: "right", "" }
