@@ -66,6 +66,7 @@ fn Stats(cx: Scope<StatsProps>) -> Element {
                     th { "Min" }
                     th { "Max" }
                     th { "Avg" }
+                    th { "Freq" }
                     th { "Throughput" }
                     th { "Jitter" }
                 }
@@ -76,7 +77,8 @@ fn Stats(cx: Scope<StatsProps>) -> Element {
                     th { "(ms)" }
                     th { "(ms)" }
                     th { "(ms)" }
-                    th { "Hz" }
+                    th { "(Hz)" }
+                    th { "" }
                     th { "%" }
                 }
             }
@@ -107,18 +109,19 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     let last_period = stats.last_period().map(fmt_period).unwrap_or_default();
     let min_period = stats.min_period().map(fmt_period).unwrap_or_default();
     let max_period = stats.max_period().map(fmt_period).unwrap_or_default();
+    let avg_period = stats.avg_period().map(fmt_period).unwrap_or_default();
 
-    let avg_period = stats
+    let avg_freq = stats
         .avg_period()
         .map(|x| x.as_secs_f64())
         .and_then(|s| if s != 0. { Some(1. / (s as f64)) } else { None })
         .unwrap_or_default();
-    let avg_period = format!("{:.2}", avg_period);
+    let avg_freq = format!("{:.2}", avg_freq);
 
     let throughput = stats.throughput();
     let throughput = format!("{:.2}", throughput);
 
-    let period_jitter = (stats.period_jitter() * 100.).to_string();
+    let period_jitter = stats.period_jitter() * 100.;
     let period_jitter = format!("{:.2}", period_jitter);
 
     cx.render(rsx! {
@@ -129,6 +132,7 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
             td { min_period }
             td { max_period }
             td { avg_period }
+            td { avg_freq }
             td { throughput }
             td { period_jitter }
         }
