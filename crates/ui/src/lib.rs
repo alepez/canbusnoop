@@ -36,12 +36,27 @@ fn App(cx: Scope<AppProps>) -> Element {
     });
 
     let count = stats.read().count();
-    let stats = stats.read().to_string();
+    let stats: MultiStats = stats.read().clone();
 
     cx.render(rsx! {
         div {
             "Count: {count}"
         }
+        Stats {
+            stats: stats
+        }
+    })
+}
+
+#[derive(Props, PartialEq)]
+struct StatsProps {
+    stats: MultiStats,
+}
+
+fn Stats(cx: Scope<StatsProps>) -> Element {
+    let stats = cx.props.stats.to_string();
+
+    cx.render(rsx! {
         div {
             pre {
                 stats

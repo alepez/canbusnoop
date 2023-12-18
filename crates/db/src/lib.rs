@@ -3,7 +3,7 @@ use std::collections::{HashMap, VecDeque};
 use std::fmt::Display;
 use std::time::{Duration, Instant};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 struct Stats {
     started_at: Instant,
     count: usize,
@@ -100,7 +100,7 @@ impl Stats {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone, PartialEq)]
 pub struct MultiStats {
     stats: HashMap<u32, Stats>,
     total_count: usize,
