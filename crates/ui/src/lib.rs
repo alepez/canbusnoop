@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use ansi_colours::rgb_from_ansi256;
 use canbusnoop_core::Frame;
 use canbusnoop_db::{MultiStats, Stats};
 use dioxus::prelude::*;
@@ -105,7 +106,6 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     let stats = &cx.props.stats;
     let id = cx.props.id;
 
-    let id = format!("{:08X}", id);
     let count = stats.count().to_string();
     let last_period = stats.last_period().map(fmt_period).unwrap_or_default();
     let min_period = stats.min_period().map(fmt_period).unwrap_or_default();
@@ -130,6 +130,26 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 
     let period_jitter = stats.period_jitter() * 100.;
     let period_jitter = format!("{:.2}", period_jitter);
+
+    let byte_to_color = |byte: u8| {
+        let color = rgb_from_ansi256(byte);
+        format!("rgb({},{},{})", color.0, color.1, color.2)
+    };
+
+    let id = {
+        let id_arr = id.to_be_bytes();
+
+        cx.render(rsx! {
+            div {
+                for &c in id_arr.iter() {
+                    span {
+                        color: "{byte_to_color(c)}",
+                        format!("{:02X}", c)
+                    }
+                }
+            }
+        })
+    };
 
     cx.render(rsx! {
         tr {

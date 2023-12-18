@@ -24,3 +24,4 @@ canbusnoop-db = { path = "../db" }
 dioxus = "0.4.3"
 dioxus-desktop = "0.4.3"
 futures = "0.3.29"
+ansi_colours = "1.1"
