@@ -36,10 +36,16 @@ fn App(cx: Scope<AppProps>) -> Element {
     });
 
     let count = stats.read().count();
+    let stats = stats.read().to_string();
 
     cx.render(rsx! {
         div {
             "Count: {count}"
+        }
+        div {
+            pre {
+                stats
+            }
         }
     })
 }
