@@ -103,6 +103,7 @@ struct StatsItemProps {
 }
 
 fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
+    let over = use_state(cx, || false);
     let stats = &cx.props.stats;
     let id = cx.props.id;
 
@@ -162,8 +163,17 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
         })
     };
 
+    let tr_bg_color = if *over.get() {
+        "#c0c0c0"
+    } else {
+        "transparent"
+    };
+
     cx.render(rsx! {
         tr {
+            background_color: "{tr_bg_color}",
+            onmouseover: move |_| over.set(true),
+            onmouseleave: move |_| over.set(false),
             td { text_align: "right", id }
             td { text_align: "right", count }
             td { text_align: "right", last_period }
