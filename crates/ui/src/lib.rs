@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use ansi_colours::rgb_from_ansi256;
 use canbusnoop_core::Frame;
 use canbusnoop_db::{MultiStats, Stats};
+use colorsys::{Hsl, Rgb};
 use dioxus::prelude::*;
 use dioxus_desktop::Config;
 use futures::StreamExt;
@@ -131,9 +131,12 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     let period_jitter = stats.period_jitter() * 100.;
     let period_jitter = format!("{:.2}", period_jitter);
 
-    let byte_to_color = |byte: u8| {
-        let color = rgb_from_ansi256(byte);
-        format!("rgb({},{},{})", color.0, color.1, color.2)
+    let nibble_to_color = |byte: u8| {
+        let h = byte as f64 / 16. * 360.;
+        let s = 100.;
+        let l = 50.;
+        let color = Hsl::new(h, s, l, None);
+        Rgb::from(color).to_hex_string()
     };
 
     let id = {
@@ -141,10 +144,18 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 
         cx.render(rsx! {
             div {
+                font_family: "monospace",
+                font_size: "1.2em",
                 for &c in id_arr.iter() {
                     span {
-                        color: "{byte_to_color(c)}",
-                        format!("{:02X}", c)
+                        background_color: "{nibble_to_color(c >> 4)}",
+                        padding: "0.2em",
+                        format!("{:01X}", c >> 4)
+                    }
+                    span {
+                        background_color: "{nibble_to_color(c & 0x0F)}",
+                        padding: "0.2em",
+                        format!("{:01X}", c & 0x0F)
                     }
                 }
             }

@@ -27,15 +27,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ansi_colours"
-version = "1.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a1558bd2075d341b9ca698ec8eb6fcc55a746b1fc4255585aad5b141d918a80"
-dependencies = [
- "rgb",
-]
-
-[[package]]
 name = "anstream"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -378,10 +369,10 @@ dependencies = [
 name = "canbusnoop-ui"
 version = "0.1.0"
 dependencies = [
- "ansi_colours",
  "canbusnoop-bus",
  "canbusnoop-core",
  "canbusnoop-db",
+ "colorsys",
  "dioxus",
  "dioxus-desktop",
  "env_logger",
@@ -517,6 +508,12 @@ name = "colorchoice"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "acbf1af155f9b9ef647e42cdc158db4b64a1b61f743629225fde6f3e0be2a7c7"
+
+[[package]]
+name = "colorsys"
+version = "0.6.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "54261aba646433cb567ec89844be4c4825ca92a4f8afba52fc4dd88436e31bbd"
 
 [[package]]
 name = "combine"
@@ -2449,15 +2446,6 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "windows",
-]
-
-[[package]]
-name = "rgb"
-version = "0.8.37"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05aaa8004b64fd573fc9d002f4e632d51ad4f026c2b5ba95fcb6c2f32c2c47d8"
-dependencies = [
- "bytemuck",
 ]
 
 [[package]]
