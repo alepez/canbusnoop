@@ -7,6 +7,7 @@ use dioxus_desktop::Config;
 use futures::StreamExt;
 use std::cell::Cell;
 use std::time::Duration;
+use dioxus::html::style;
 
 struct AppProps {
     rx_receiver: Cell<Option<UnboundedReceiver<Frame>>>,
@@ -58,28 +59,29 @@ fn Stats(cx: Scope<StatsProps>) -> Element {
 
     cx.render(rsx! {
         table {
+            width: "100%",
             thead {
                 tr {
-                    th { "ID" }
-                    th { "Count" }
-                    th { "Last" }
-                    th { "Min" }
-                    th { "Max" }
-                    th { "Avg" }
-                    th { "Freq" }
-                    th { "Throughput" }
-                    th { "Jitter" }
+                    th { text_align: "right", "ID" }
+                    th { text_align: "right", "Count" }
+                    th { text_align: "right", "Last" }
+                    th { text_align: "right", "Min" }
+                    th { text_align: "right", "Max" }
+                    th { text_align: "right", "Avg" }
+                    th { text_align: "right", "Freq" }
+                    th { text_align: "right", "Throughput" }
+                    th { text_align: "right", "Jitter" }
                 }
                 tr {
-                    th { "" }
-                    th { "" }
-                    th { "(ms)" }
-                    th { "(ms)" }
-                    th { "(ms)" }
-                    th { "(ms)" }
-                    th { "(Hz)" }
-                    th { "" }
-                    th { "%" }
+                    th { text_align: "right", "" }
+                    th { text_align: "right", "" }
+                    th { text_align: "right", "(ms)" }
+                    th { text_align: "right", "(ms)" }
+                    th { text_align: "right", "(ms)" }
+                    th { text_align: "right", "(ms)" }
+                    th { text_align: "right", "(Hz)" }
+                    th { text_align: "right", "" }
+                    th { text_align: "right", "%" }
                 }
             }
             tbody {
@@ -132,15 +134,15 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 
     cx.render(rsx! {
         tr {
-            td { id }
-            td { count }
-            td { last_period }
-            td { min_period }
-            td { max_period }
-            td { avg_period }
-            td { avg_freq }
-            td { throughput }
-            td { period_jitter }
+            td { text_align: "right", id }
+            td { text_align: "right", count }
+            td { text_align: "right", last_period }
+            td { text_align: "right", min_period }
+            td { text_align: "right", max_period }
+            td { text_align: "right", avg_period }
+            td { text_align: "right", avg_freq }
+            td { text_align: "right", throughput }
+            td { text_align: "right", period_jitter }
         }
     })
 }
