@@ -1,5 +1,5 @@
 use canbusnoop_core::Frame;
-use std::collections::{HashMap, VecDeque};
+use std::collections::{BTreeMap, VecDeque};
 use std::fmt::Display;
 use std::time::{Duration, Instant};
 
@@ -138,7 +138,7 @@ impl Stats {
 
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct MultiStats {
-    stats: HashMap<u32, Stats>,
+    stats: BTreeMap<u32, Stats>,
     total_count: usize,
 }
 
