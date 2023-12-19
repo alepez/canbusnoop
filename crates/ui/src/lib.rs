@@ -22,6 +22,8 @@ pub fn launch(rx_receiver: UnboundedReceiver<Frame>) {
 
 fn App(cx: Scope<AppProps>) -> Element {
     let stats = use_ref(cx, || MultiStats::default());
+    let can_id_filter = use_state(cx, || "00000000".to_string());
+    let can_id_mask = use_state(cx, || "00000000".to_string());
 
     let _ = use_coroutine(cx, |_: UnboundedReceiver<()>| {
         let receiver = cx.props.rx_receiver.take();
@@ -39,9 +41,27 @@ fn App(cx: Scope<AppProps>) -> Element {
     let count = stats.read().count();
     let stats: MultiStats = stats.read().clone();
 
+    let stats = {
+      let can_id_filter = u32::from_str_radix(can_id_filter.as_str(), 16).unwrap_or(0x00000000);
+      let can_id_mask = u32::from_str_radix(can_id_mask.as_str(), 16).unwrap_or(0x00000000);
+      stats.filter_by_can_id(can_id_filter, can_id_mask)
+    };
+
     cx.render(rsx! {
         div {
             "Total: {count}"
+        }
+        div {
+          div { "filter" }
+          input {
+            value: "{can_id_filter}",
+            oninput: move |evt| can_id_filter.set(evt.value.clone()),
+          }
+          div { "mask" }
+          input {
+            value: "{can_id_mask}",
+            oninput: move |evt| can_id_mask.set(evt.value.clone()),
+          }
         }
         Stats {
             stats: stats

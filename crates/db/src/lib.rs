@@ -165,6 +165,10 @@ impl MultiStats {
     pub fn iter(&self) -> impl Iterator<Item = (&u32, &Stats)> {
         self.stats.iter()
     }
+
+    pub fn into_iter(self) -> impl Iterator<Item = (u32, Stats)> {
+        self.stats.into_iter()
+    }
 }
 
 impl Display for MultiStats {
@@ -224,4 +228,22 @@ fn calculate_jitter<'a>(mut periods: impl Iterator<Item = &'a Duration>) -> f64 
     let average_difference = sum / (differences.len() as f64);
     // Calculate and return the jitter value
     average_difference
+}
+
+impl MultiStats {
+    pub fn filter_by_can_id(self, f: u32, m: u32) -> Self {
+        let Self { stats, .. } = self;
+        let mut total_count = 0;
+        let stats = stats
+            .into_iter()
+            .filter(|(id, _)| {
+                let ok = (id & m) == (f & m);
+                if ok {
+                    total_count += 1;
+                }
+                ok
+            })
+            .collect();
+        Self { stats, total_count }
+    }
 }
