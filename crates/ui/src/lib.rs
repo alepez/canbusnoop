@@ -133,7 +133,7 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     let period_jitter = format!("{:.2}", period_jitter);
 
     let nibble_to_color = |byte: u8| {
-        let h = byte as f64 / 16. * 360.;
+        let h = byte as f64 / 16. * (360. / 16.0 * 15.0);
         let s = 100.;
         let l = 50.;
         let color = Hsl::new(h, s, l, None);
