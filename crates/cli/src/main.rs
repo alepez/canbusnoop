@@ -52,7 +52,7 @@ fn setup_env_logger() {
 
     let mut builder = Builder::from_default_env();
     builder.format_timestamp_millis();
-    builder.target(Target::Stdout);
+    builder.target(Target::Stderr);
     builder.init();
 }
 
