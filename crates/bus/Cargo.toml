@@ -19,3 +19,5 @@ log = "0.4"
 anyhow = "1"
 thiserror = "1"
 canbusnoop-core = { path = "../core" }
+oorandom = "11.1.3"
+
