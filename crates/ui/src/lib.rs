@@ -132,14 +132,6 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     let period_jitter = stats.period_jitter() * 100.;
     let period_jitter = format!("{:.2}", period_jitter);
 
-    let nibble_to_color = |byte: u8| {
-        let h = byte as f64 / 16. * (360. / 16.0 * 15.0);
-        let s = 100.;
-        let l = 50.;
-        let color = Hsl::new(h, s, l, None);
-        Rgb::from(color).to_hex_string()
-    };
-
     let id = {
         let id_arr = id.to_be_bytes();
 
@@ -190,4 +182,13 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 fn fmt_period(x: Duration) -> String {
     let ms = x.as_millis();
     format!("{:6?}", ms)
+}
+
+/// Translate a nibble (0-16) to a color hex string
+fn nibble_to_color(byte: u8) -> String {
+    let h = byte as f64 / 16. * (360. / 16.0 * 15.0);
+    let s = 100.;
+    let l = 50.;
+    let color = Hsl::new(h, s, l, None);
+    Rgb::from(color).to_hex_string()
 }
