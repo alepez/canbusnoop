@@ -89,25 +89,76 @@ fn Stats(cx: Scope<StatsProps>) -> Element {
                         class: "w-40",
                         "ID"
                     }
-                    th { "Count" }
-                    th { "Last" }
-                    th { "Min" }
-                    th { "Max" }
-                    th { "Avg" }
-                    th { "Freq" }
-                    th { "Throughput" }
-                    th { "Jitter" }
+                    th {
+                        class: "p-2",
+                        "Count"
+                    }
+                    th {
+                        class: "p-2",
+                        "Last"
+                    }
+                    th {
+                        class: "p-2",
+                        "Min"
+                    }
+                    th {
+                        class: "p-2",
+                        "Max"
+                    }
+                    th {
+                        class: "p-2",
+                        "Avg"
+                    }
+                    th {
+                        class: "p-2",
+                        "Freq"
+                    }
+                    th {
+                        class: "p-2",
+                        "Throughput"
+                    }
+                    th {
+                        class: "p-2",
+                        "Jitter"
+                    }
                 }
                 tr {
-                    th { "" }
-                    th { "" }
-                    th { "(ms)" }
-                    th { "(ms)" }
-                    th { "(ms)" }
-                    th { "(ms)" }
-                    th { "(Hz)" }
-                    th { "(Hz)" }
-                    th { "%" }
+                    th {
+                        class: "p-2",
+                        ""
+                    }
+                    th {
+                        class: "p-2",
+                        ""
+                    }
+                    th {
+                        class: "p-2",
+                        "(ms)"
+                    }
+                    th {
+                        class: "p-2",
+                        "(ms)"
+                    }
+                    th {
+                        class: "p-2",
+                        "(ms)"
+                    }
+                    th {
+                        class: "p-2",
+                        "(ms)"
+                    }
+                    th {
+                        class: "p-2",
+                        "(Hz)"
+                    }
+                    th {
+                        class: "p-2",
+                        "(Hz)"
+                    }
+                    th {
+                        class: "p-2",
+                        "%"
+                    }
                 }
             }
             tbody {
@@ -192,39 +243,39 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
             onmouseover: move |_| over.set(true),
             onmouseleave: move |_| over.set(false),
             th {
-                class: "font-mono px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white",
+                class: "p-2 font-mono font-medium text-gray-900 dark:text-white",
                 id
             }
             td {
-                class: "px-6 py-4",
+                class: "p-2",
                 count
             }
             td {
-                class: "",
+                class: "p-2",
                 last_period
             }
             td {
-                class: "",
+                class: "p-2",
                 min_period
             }
             td {
-                class: "",
+                class: "p-2",
                 max_period
             }
             td {
-                class: "",
+                class: "p-2",
                 avg_period
             }
             td {
-                class: "",
+                class: "p-2",
                 avg_freq
             }
             td {
-                class: "",
+                class: "p-2",
                 throughput
             }
             td {
-                class: "",
+                class: "p-2",
                 period_jitter
             }
         }
