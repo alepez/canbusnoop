@@ -27,7 +27,7 @@ impl CanBusReader {
 
     pub async fn read(&mut self) -> Option<Frame> {
         match &mut self.inner {
-            InnerCanBusReader::SocketCan(socket_can) => socket_can.read().await,
+            InnerCanBusReader::SocketCan(inner) => inner.read().await,
             InnerCanBusReader::Demo(inner) => inner.read().await,
         }
     }
