@@ -1,5 +1,8 @@
+mod demo;
+
 use anyhow::Result;
 use canbusnoop_core::Frame;
+use demo::DemoBusReader;
 use tokio_socketcan::{CANFrame, CANSocket};
 use tokio_stream::StreamExt;
 
@@ -22,7 +25,7 @@ impl CanBusReader {
                 InnerCanBusReader::SocketCan(SocketCanBusReader::new(socket_can_config)?)
             }
             Config::Demo => {
-                todo!()
+                InnerCanBusReader::Demo(DemoBusReader::new()?)
             }
         };
         Ok(CanBusReader { inner })
@@ -31,6 +34,7 @@ impl CanBusReader {
     pub async fn read(&mut self) -> Option<Frame> {
         match &mut self.inner {
             InnerCanBusReader::SocketCan(socket_can) => socket_can.read().await,
+            InnerCanBusReader::Demo(inner) => inner.read().await,
         }
     }
 }
@@ -62,6 +66,7 @@ pub struct SocketCanConfig {
 
 enum InnerCanBusReader {
     SocketCan(SocketCanBusReader),
+    Demo(DemoBusReader),
 }
 
 struct SocketCanBusReader {
