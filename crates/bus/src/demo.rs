@@ -1,15 +1,14 @@
 use std::time::Duration;
 
-use anyhow::Result;
 use canbusnoop_core::Frame;
 
-pub(crate) struct DemoBusReader {
+pub(crate) struct Reader {
     iteration: usize,
 }
 
-impl DemoBusReader {
-    pub(crate) fn new() -> Result<DemoBusReader> {
-        Ok(DemoBusReader { iteration: 0 })
+impl Reader {
+    pub(crate) fn new() -> Self {
+        Reader { iteration: 0 }
     }
 
     pub(crate) async fn read(&mut self) -> Option<Frame> {
