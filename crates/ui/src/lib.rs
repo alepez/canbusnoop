@@ -16,7 +16,9 @@ struct AppProps {
 pub fn launch(rx_receiver: UnboundedReceiver<Frame>) {
     let rx_receiver = Cell::new(Some(rx_receiver));
     let props = AppProps { rx_receiver };
-    let config = Config::default();
+    let config = Config::new()
+        .with_custom_head(r#"<link rel="stylesheet" href="public/tailwind.css">"#.to_string());
+
     dioxus_desktop::launch_with_props(App, props, config);
 }
 
@@ -42,9 +44,9 @@ fn App(cx: Scope<AppProps>) -> Element {
     let stats: MultiStats = stats.read().clone();
 
     let stats = {
-      let can_id_filter = u32::from_str_radix(can_id_filter.as_str(), 16).unwrap_or(0x00000000);
-      let can_id_mask = u32::from_str_radix(can_id_mask.as_str(), 16).unwrap_or(0x00000000);
-      stats.filter_by_can_id(can_id_filter, can_id_mask)
+        let can_id_filter = u32::from_str_radix(can_id_filter.as_str(), 16).unwrap_or(0x00000000);
+        let can_id_mask = u32::from_str_radix(can_id_mask.as_str(), 16).unwrap_or(0x00000000);
+        stats.filter_by_can_id(can_id_filter, can_id_mask)
     };
 
     cx.render(rsx! {
