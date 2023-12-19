@@ -6,6 +6,7 @@ use canbusnoop_ui::launch;
 use clap::Parser;
 use futures_channel::mpsc::{unbounded, UnboundedSender};
 
+/// Read CAN frames from the CAN bus and send them to the UI
 async fn can_read_task(
     can_interface: String,
     rx_sender: UnboundedSender<Frame>,
@@ -20,6 +21,7 @@ async fn can_read_task(
     Ok(())
 }
 
+/// Create a tokio runtime and run the can_read_task
 fn can_read_thread_fun(can_interface: String, rx_sender: UnboundedSender<Frame>) {
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
@@ -47,6 +49,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Setup the logging framework
 fn setup_env_logger() {
     use env_logger::{Builder, Target};
 
