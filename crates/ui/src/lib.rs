@@ -81,29 +81,33 @@ fn Stats(cx: Scope<StatsProps>) -> Element {
 
     cx.render(rsx! {
         table {
-            width: "100%",
+            class: "table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400",
             thead {
+                class: "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
                 tr {
-                    th { width: "20%", text_align: "right", "ID" }
-                    th { width: "10%", text_align: "right", "Count" }
-                    th { width: "10%", text_align: "right", "Last" }
-                    th { width: "10%", text_align: "right", "Min" }
-                    th { width: "10%", text_align: "right", "Max" }
-                    th { width: "10%", text_align: "right", "Avg" }
-                    th { width: "10%", text_align: "right", "Freq" }
-                    th { width: "10%", text_align: "right", "Throughput" }
-                    th { width: "10%", text_align: "right", "Jitter" }
+                    th {
+                        class: "w-40",
+                        "ID"
+                    }
+                    th { "Count" }
+                    th { "Last" }
+                    th { "Min" }
+                    th { "Max" }
+                    th { "Avg" }
+                    th { "Freq" }
+                    th { "Throughput" }
+                    th { "Jitter" }
                 }
                 tr {
-                    th { text_align: "right", "" }
-                    th { text_align: "right", "" }
-                    th { text_align: "right", "(ms)" }
-                    th { text_align: "right", "(ms)" }
-                    th { text_align: "right", "(ms)" }
-                    th { text_align: "right", "(ms)" }
-                    th { text_align: "right", "(Hz)" }
-                    th { text_align: "right", "(Hz)" }
-                    th { text_align: "right", "%" }
+                    th { "" }
+                    th { "" }
+                    th { "(ms)" }
+                    th { "(ms)" }
+                    th { "(ms)" }
+                    th { "(ms)" }
+                    th { "(Hz)" }
+                    th { "(Hz)" }
+                    th { "%" }
                 }
             }
             tbody {
@@ -159,8 +163,6 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 
         cx.render(rsx! {
             div {
-                font_family: "monospace",
-                font_size: "1.2em",
                 for &c in id_arr.iter() {
                     span {
                         background_color: "{nibble_to_color(c >> 4)}",
@@ -185,18 +187,46 @@ fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 
     cx.render(rsx! {
         tr {
+            class: "bg-white border-b dark:bg-gray-800 dark:border-gray-700",
             background_color: "{tr_bg_color}",
             onmouseover: move |_| over.set(true),
             onmouseleave: move |_| over.set(false),
-            td { text_align: "right", id }
-            td { text_align: "right", count }
-            td { text_align: "right", last_period }
-            td { text_align: "right", min_period }
-            td { text_align: "right", max_period }
-            td { text_align: "right", avg_period }
-            td { text_align: "right", avg_freq }
-            td { text_align: "right", throughput }
-            td { text_align: "right", period_jitter }
+            th {
+                class: "font-mono px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white",
+                id
+            }
+            td {
+                class: "px-6 py-4",
+                count
+            }
+            td {
+                class: "",
+                last_period
+            }
+            td {
+                class: "",
+                min_period
+            }
+            td {
+                class: "",
+                max_period
+            }
+            td {
+                class: "",
+                avg_period
+            }
+            td {
+                class: "",
+                avg_freq
+            }
+            td {
+                class: "",
+                throughput
+            }
+            td {
+                class: "",
+                period_jitter
+            }
         }
     })
 }
