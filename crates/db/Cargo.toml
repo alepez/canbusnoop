@@ -11,4 +11,4 @@ keywords = ["can", "socketcan", "sniffer"]
 
 [dependencies]
 log = "0.4"
-canbusnoop-core = { path = "../../crates/core" }
+canbusnoop-core = { path = "../core" }

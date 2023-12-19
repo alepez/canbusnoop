@@ -18,4 +18,4 @@ tokio-util = { version = "0.7", features = ["codec"] }
 log = "0.4"
 anyhow = "1"
 thiserror = "1"
-canbusnoop-core = { path = "../../crates/core" }
+canbusnoop-core = { path = "../core" }
