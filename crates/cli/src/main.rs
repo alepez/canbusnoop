@@ -11,7 +11,7 @@ async fn can_read_task(
     can_interface: String,
     rx_sender: UnboundedSender<Frame>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let config = Config::new_socket_can(can_interface);
+    let config = Config::new(can_interface)?;
     let mut reader = CanBusReader::new(config)?;
 
     while let Some(frame) = reader.read().await {

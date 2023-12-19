@@ -7,6 +7,8 @@ use tokio_stream::StreamExt;
 pub enum Error {
     #[error("socket can error")]
     SocketCanError(#[from] tokio_socketcan::Error),
+    #[error("invalid interface: {0}")]
+    InvalidInterface(String),
 }
 
 pub struct CanBusReader {
@@ -18,6 +20,9 @@ impl CanBusReader {
         let inner = match config {
             Config::SocketCan(socket_can_config) => {
                 InnerCanBusReader::SocketCan(SocketCanBusReader::new(socket_can_config)?)
+            }
+            Config::Demo => {
+                todo!()
             }
         };
         Ok(CanBusReader { inner })
@@ -33,11 +38,20 @@ impl CanBusReader {
 #[derive(Debug)]
 pub enum Config {
     SocketCan(SocketCanConfig),
+    Demo,
 }
 
 impl Config {
-    pub fn new_socket_can(interface: String) -> Config {
-        Config::SocketCan(SocketCanConfig { interface })
+    pub fn new(interface: String) -> Result<Config, Error> {
+        if interface.starts_with("can") {
+            return Ok(Config::SocketCan(SocketCanConfig { interface }));
+        }
+
+        if interface.starts_with("demo") {
+            return Ok(Config::Demo);
+        }
+
+        Err(Error::InvalidInterface(interface))
     }
 }
 
