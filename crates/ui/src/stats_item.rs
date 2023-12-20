@@ -16,27 +16,6 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 
     let stats_str = StatsStrings::from(stats);
 
-    let id = {
-        let id_arr = id.to_be_bytes();
-
-        cx.render(rsx! {
-            div {
-                for &c in id_arr.iter() {
-                    span {
-                        background_color: "{nibble_to_color(c >> 4)}",
-                        padding: "0.2em",
-                        format!("{:01X}", c >> 4)
-                    }
-                    span {
-                        background_color: "{nibble_to_color(c & 0x0F)}",
-                        padding: "0.2em",
-                        format!("{:01X}", c & 0x0F)
-                    }
-                }
-            }
-        })
-    };
-
     let tr_bg_color = if *over.get() {
         "#c0c0c0"
     } else {
@@ -51,7 +30,7 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
             onmouseleave: move |_| over.set(false),
             th {
                 class: "p-2 font-mono font-medium text-gray-900 dark:text-white",
-                id
+                ColoredId { id: id }
             }
             td {
                 class: "p-2",
@@ -103,7 +82,7 @@ fn nibble_to_color(byte: u8) -> String {
     Rgb::from(color).to_hex_string()
 }
 
-pub struct StatsStrings {
+struct StatsStrings {
     count: String,
     last_period: String,
     min_period: String,
@@ -152,4 +131,26 @@ impl From<&Stats> for StatsStrings {
             avg_freq,
         }
     }
+}
+
+#[component]
+fn ColoredId(cx: Scope, id: u32) -> Element {
+    let id_arr = id.to_be_bytes();
+
+    cx.render(rsx! {
+        div {
+            for &c in id_arr.iter() {
+                span {
+                    background_color: "{nibble_to_color(c >> 4)}",
+                    padding: "0.2em",
+                    format!("{:01X}", c >> 4)
+                }
+                span {
+                    background_color: "{nibble_to_color(c & 0x0F)}",
+                    padding: "0.2em",
+                    format!("{:01X}", c & 0x0F)
+                }
+            }
+        }
+    })
 }
