@@ -10,28 +10,14 @@ pub(crate) struct StatsItemProps {
 }
 
 pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
-    let over = use_state(cx, || false);
     let stats = &cx.props.stats;
     let id = cx.props.id;
 
     let stats_str = StatsStrings::from(stats);
 
-    let tr_bg_color = if *over.get() {
-        "#c0c0c0"
-    } else {
-        "transparent"
-    };
-
     cx.render(rsx! {
-        tr {
-            class: "bg-white border-b dark:bg-gray-800 dark:border-gray-700",
-            background_color: "{tr_bg_color}",
-            onmouseover: move |_| over.set(true),
-            onmouseleave: move |_| over.set(false),
-            th {
-                class: "p-2 font-mono font-medium text-gray-900 dark:text-white",
-                ColoredId { id: id }
-            }
+        Row {
+            Cell { ColoredId { id: id } }
             Cell { stats_str.count }
             Cell { stats_str.last_period }
             Cell { stats_str.min_period }
@@ -149,4 +135,28 @@ fn Cell<'a>(cx: Scope<'a, CellProps<'a>>) -> Element {
             &cx.props.children
         }
     ))
+}
+
+#[derive(Props)]
+struct RowProps<'a> {
+    children: Element<'a>,
+}
+
+fn Row<'a>(cx: Scope<'a, RowProps<'a>>) -> Element {
+    let over = use_state(cx, || false);
+    let tr_bg_color = if *over.get() {
+        "#c0c0c0"
+    } else {
+        "transparent"
+    };
+
+    cx.render(rsx! {
+        tr {
+            class: "bg-white border-b dark:bg-gray-800 dark:border-gray-700",
+            background_color: "{tr_bg_color}",
+            onmouseover: move |_| over.set(true),
+            onmouseleave: move |_| over.set(false),
+            &cx.props.children
+        }
+    })
 }
