@@ -3,18 +3,3 @@ name = "canbusnoop"
 default_platform = "desktop"
 out_dir = "dist"
 asset_dir = "public"
-
-[web.app]
-title = "canbusnoop"
-
-[web.watcher]
-reload_html = true
-watch_path = ["src", "public"]
-
-[web.resource]
-style = ["tailwind.css"]
-script = []
-
-[web.resource.dev]
-style = []
-script = []
