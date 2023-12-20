@@ -140,17 +140,23 @@ fn ColoredId(cx: Scope, id: u32) -> Element {
     cx.render(rsx! {
         div {
             for &c in id_arr.iter() {
-                span {
-                    background_color: "{nibble_to_color(c >> 4)}",
-                    padding: "0.2em",
-                    format!("{:01X}", c >> 4)
-                }
-                span {
-                    background_color: "{nibble_to_color(c & 0x0F)}",
-                    padding: "0.2em",
-                    format!("{:01X}", c & 0x0F)
-                }
+                ColoredNibble { nibble: c >> 4 }
+                ColoredNibble { nibble: c & 0x0F }
             }
+        }
+    })
+}
+
+#[component]
+fn ColoredNibble(cx: Scope, nibble: u8) -> Element {
+    let color = nibble_to_color(*nibble);
+    let nibble = format!("{:01X}", nibble);
+
+    cx.render(rsx! {
+        span {
+            background_color: "{color}",
+            padding: "0.2em",
+            nibble
         }
     })
 }
