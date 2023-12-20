@@ -15,7 +15,7 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
 
     let stats_str = StatsStrings::from(stats);
 
-    cx.render(rsx! {
+    render! {
         Row {
             Cell { ColoredId { id: id } }
             Cell { stats_str.count }
@@ -27,7 +27,7 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
             Cell { stats_str.throughput }
             Cell { stats_str.period_jitter }
         }
-    })
+    }
 }
 
 fn fmt_period(x: Duration) -> String {
@@ -99,14 +99,14 @@ impl From<&Stats> for StatsStrings {
 fn ColoredId(cx: Scope, id: u32) -> Element {
     let id_arr = id.to_be_bytes();
 
-    cx.render(rsx! {
+    render! {
         div {
             for &c in id_arr.iter() {
                 ColoredNibble { nibble: c >> 4 }
                 ColoredNibble { nibble: c & 0x0F }
             }
         }
-    })
+    }
 }
 
 #[component]
@@ -114,13 +114,13 @@ fn ColoredNibble(cx: Scope, nibble: u8) -> Element {
     let color = nibble_to_color(*nibble);
     let nibble = format!("{:01X}", nibble);
 
-    cx.render(rsx! {
+    render! {
         span {
             background_color: "{color}",
             padding: "0.2em",
             nibble
         }
-    })
+    }
 }
 
 #[derive(Props)]
@@ -129,12 +129,12 @@ struct CellProps<'a> {
 }
 
 fn Cell<'a>(cx: Scope<'a, CellProps<'a>>) -> Element {
-    cx.render(rsx!(
+    render!(
         td {
             class: "p-2",
             &cx.props.children
         }
-    ))
+    )
 }
 
 #[derive(Props)]
@@ -143,10 +143,10 @@ struct RowProps<'a> {
 }
 
 fn Row<'a>(cx: Scope<'a, RowProps<'a>>) -> Element {
-    cx.render(rsx! {
+    render! {
         tr {
             class: "bg-white hover:bg-gray-200 border-b dark:bg-gray-800 dark:border-gray-700",
             &cx.props.children
         }
-    })
+    }
 }

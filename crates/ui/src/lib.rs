@@ -51,7 +51,7 @@ fn App(cx: Scope<AppProps>) -> Element {
         stats.filter_by_can_id(can_id_filter, can_id_mask)
     };
 
-    cx.render(rsx! {
+    render! {
         div {
             "Total: {count}"
         }
@@ -70,5 +70,5 @@ fn App(cx: Scope<AppProps>) -> Element {
         Stats {
             stats: stats
         }
-    })
+    }
 }

@@ -9,10 +9,10 @@ pub(crate) struct StatsProps {
 
 pub(crate) fn Stats(cx: Scope<StatsProps>) -> Element {
     let stats = &cx.props.stats;
-    let header1 = COLUMNS.iter().map(|(x, _)| cx.render(rsx!(Cell { x })));
-    let header0 = COLUMNS.iter().map(|(_, x)| cx.render(rsx!(Cell { x })));
+    let header1 = COLUMNS.iter().map(|(x, _)| render! { Cell { x } });
+    let header0 = COLUMNS.iter().map(|(_, x)| render! { Cell { x } });
 
-    cx.render(rsx! {
+    render! {
         table {
             class: "table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400",
             thead {
@@ -29,7 +29,7 @@ pub(crate) fn Stats(cx: Scope<StatsProps>) -> Element {
                 }
             }
         }
-    })
+    }
 }
 
 #[derive(Props)]
@@ -38,12 +38,12 @@ struct CellProps<'a> {
 }
 
 fn Cell<'a>(cx: Scope<'a, CellProps<'a>>) -> Element {
-    cx.render(rsx!(
+    render! {
         th {
             class: "p-2",
             &cx.props.children
         }
-    ))
+    }
 }
 
 const COLUMNS: [(&'static str, &'static str); 9] = [
