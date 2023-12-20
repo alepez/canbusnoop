@@ -9,34 +9,16 @@ pub(crate) struct StatsProps {
 
 pub(crate) fn Stats(cx: Scope<StatsProps>) -> Element {
     let stats = &cx.props.stats;
+    let header1 = COLUMNS.iter().map(|(x, _)| cx.render(rsx!(Cell { x })));
+    let header0 = COLUMNS.iter().map(|(_, x)| cx.render(rsx!(Cell { x })));
 
     cx.render(rsx! {
         table {
             class: "table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400",
             thead {
                 class: "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
-                tr {
-                    Cell { "ID" }
-                    Cell { "Count" }
-                    Cell { "Last" }
-                    Cell { "Min" }
-                    Cell { "Max" }
-                    Cell { "Avg" }
-                    Cell { "Freq" }
-                    Cell { "Throughput" }
-                    Cell { "Jitter" }
-                }
-                tr {
-                    Cell { "" }
-                    Cell { "" }
-                    Cell { "(ms)" }
-                    Cell { "(ms)" }
-                    Cell { "(ms)" }
-                    Cell { "(ms)" }
-                    Cell { "(Hz)" }
-                    Cell { "(Hz)" }
-                    Cell { "%" }
-                }
+                tr { header0 }
+                tr { header1 }
             }
             tbody {
                 for (&id, stats) in stats.iter() {
@@ -64,3 +46,14 @@ fn Cell<'a>(cx: Scope<'a, CellProps<'a>>) -> Element {
     ))
 }
 
+const COLUMNS: [(&'static str, &'static str); 9] = [
+    ("ID", ""),
+    ("Count", ""),
+    ("Last", "ms"),
+    ("Min", "ms"),
+    ("Max", "ms"),
+    ("Avg", "ms"),
+    ("Freq", "Hz"),
+    ("Throughput", "Hz"),
+    ("Jitter", "%"),
+];
