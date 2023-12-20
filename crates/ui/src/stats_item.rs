@@ -143,19 +143,9 @@ struct RowProps<'a> {
 }
 
 fn Row<'a>(cx: Scope<'a, RowProps<'a>>) -> Element {
-    let over = use_state(cx, || false);
-    let tr_bg_color = if *over.get() {
-        "#c0c0c0"
-    } else {
-        "transparent"
-    };
-
     cx.render(rsx! {
         tr {
-            class: "bg-white border-b dark:bg-gray-800 dark:border-gray-700",
-            background_color: "{tr_bg_color}",
-            onmouseover: move |_| over.set(true),
-            onmouseleave: move |_| over.set(false),
+            class: "bg-white hover:bg-gray-200 border-b dark:bg-gray-800 dark:border-gray-700",
             &cx.props.children
         }
     })
