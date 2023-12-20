@@ -14,30 +14,7 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     let stats = &cx.props.stats;
     let id = cx.props.id;
 
-    let count = stats.count().to_string();
-    let last_period = stats.last_period().map(fmt_period).unwrap_or_default();
-    let min_period = stats.min_period().map(fmt_period).unwrap_or_default();
-    let max_period = stats.max_period().map(fmt_period).unwrap_or_default();
-    let avg_period = stats.avg_period().map(fmt_period).unwrap_or_default();
-
-    let avg_freq = stats.avg_period().map(|x| x.as_secs_f64()).and_then(|s| {
-        if s != 0. {
-            Some(1. / (s as f64))
-        } else {
-            None
-        }
-    });
-
-    let avg_freq = match avg_freq {
-        Some(avg_freq) => format!("{:.2}", avg_freq),
-        None => "".to_string(),
-    };
-
-    let throughput = stats.throughput();
-    let throughput = format!("{:.2}", throughput);
-
-    let period_jitter = stats.period_jitter() * 100.;
-    let period_jitter = format!("{:.2}", period_jitter);
+    let stats_str = StatsStrings::from(stats);
 
     let id = {
         let id_arr = id.to_be_bytes();
@@ -78,35 +55,35 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
             }
             td {
                 class: "p-2",
-                count
+                stats_str.count
             }
             td {
                 class: "p-2",
-                last_period
+                stats_str.last_period
             }
             td {
                 class: "p-2",
-                min_period
+                stats_str.min_period
             }
             td {
                 class: "p-2",
-                max_period
+                stats_str.max_period
             }
             td {
                 class: "p-2",
-                avg_period
+                stats_str.avg_period
             }
             td {
                 class: "p-2",
-                avg_freq
+                stats_str.avg_freq
             }
             td {
                 class: "p-2",
-                throughput
+                stats_str.throughput
             }
             td {
                 class: "p-2",
-                period_jitter
+                stats_str.period_jitter
             }
         }
     })
@@ -124,4 +101,55 @@ fn nibble_to_color(byte: u8) -> String {
     let l = 50.;
     let color = Hsl::new(h, s, l, None);
     Rgb::from(color).to_hex_string()
+}
+
+pub struct StatsStrings {
+    count: String,
+    last_period: String,
+    min_period: String,
+    max_period: String,
+    avg_period: String,
+    throughput: String,
+    period_jitter: String,
+    avg_freq: String,
+}
+
+impl From<&Stats> for StatsStrings {
+    fn from(stats: &Stats) -> Self {
+        let count = stats.count().to_string();
+        let last_period = stats.last_period().map(fmt_period).unwrap_or_default();
+        let min_period = stats.min_period().map(fmt_period).unwrap_or_default();
+        let max_period = stats.max_period().map(fmt_period).unwrap_or_default();
+        let avg_period = stats.avg_period().map(fmt_period).unwrap_or_default();
+
+        let avg_freq = stats.avg_period().map(|x| x.as_secs_f64()).and_then(|s| {
+            if s != 0. {
+                Some(1. / (s as f64))
+            } else {
+                None
+            }
+        });
+
+        let avg_freq = match avg_freq {
+            Some(avg_freq) => format!("{:.2}", avg_freq),
+            None => "".to_string(),
+        };
+
+        let throughput = stats.throughput();
+        let throughput = format!("{:.2}", throughput);
+
+        let period_jitter = stats.period_jitter() * 100.;
+        let period_jitter = format!("{:.2}", period_jitter);
+
+        Self {
+            count,
+            last_period,
+            min_period,
+            max_period,
+            avg_period,
+            throughput,
+            period_jitter,
+            avg_freq,
+        }
+    }
 }
