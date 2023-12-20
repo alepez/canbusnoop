@@ -32,38 +32,14 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
                 class: "p-2 font-mono font-medium text-gray-900 dark:text-white",
                 ColoredId { id: id }
             }
-            td {
-                class: "p-2",
-                stats_str.count
-            }
-            td {
-                class: "p-2",
-                stats_str.last_period
-            }
-            td {
-                class: "p-2",
-                stats_str.min_period
-            }
-            td {
-                class: "p-2",
-                stats_str.max_period
-            }
-            td {
-                class: "p-2",
-                stats_str.avg_period
-            }
-            td {
-                class: "p-2",
-                stats_str.avg_freq
-            }
-            td {
-                class: "p-2",
-                stats_str.throughput
-            }
-            td {
-                class: "p-2",
-                stats_str.period_jitter
-            }
+            Cell { stats_str.count }
+            Cell { stats_str.last_period }
+            Cell { stats_str.min_period }
+            Cell { stats_str.max_period }
+            Cell { stats_str.avg_period }
+            Cell { stats_str.avg_freq }
+            Cell { stats_str.throughput }
+            Cell { stats_str.period_jitter }
         }
     })
 }
@@ -159,4 +135,18 @@ fn ColoredNibble(cx: Scope, nibble: u8) -> Element {
             nibble
         }
     })
+}
+
+#[derive(Props)]
+struct CellProps<'a> {
+    children: Element<'a>,
+}
+
+fn Cell<'a>(cx: Scope<'a, CellProps<'a>>) -> Element {
+    cx.render(rsx!(
+        td {
+            class: "p-2",
+            &cx.props.children
+        }
+    ))
 }
