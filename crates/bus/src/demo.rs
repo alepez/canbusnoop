@@ -20,7 +20,8 @@ impl Reader {
     }
 
     pub(crate) async fn read(&mut self) -> Option<Frame> {
-        tokio::time::sleep(Duration::from_millis(100)).await;
+        let delay = self.prng.rand_range(1..100).into();
+        tokio::time::sleep(Duration::from_millis(delay)).await;
         let rand_id_index = self.prng.rand_range(0..(self.ids.len() as u32)) as usize;
         let id = self.ids[rand_id_index];
         let data = vec![1, 2, 3, 4, 5, 6, 7, self.iteration as u8];
