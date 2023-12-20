@@ -16,80 +16,26 @@ pub(crate) fn Stats(cx: Scope<StatsProps>) -> Element {
             thead {
                 class: "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
                 tr {
-                    th {
-                        class: "w-40",
-                        "ID"
-                    }
-                    th {
-                        class: "p-2",
-                        "Count"
-                    }
-                    th {
-                        class: "p-2",
-                        "Last"
-                    }
-                    th {
-                        class: "p-2",
-                        "Min"
-                    }
-                    th {
-                        class: "p-2",
-                        "Max"
-                    }
-                    th {
-                        class: "p-2",
-                        "Avg"
-                    }
-                    th {
-                        class: "p-2",
-                        "Freq"
-                    }
-                    th {
-                        class: "p-2",
-                        "Throughput"
-                    }
-                    th {
-                        class: "p-2",
-                        "Jitter"
-                    }
+                    Cell { "ID" }
+                    Cell { "Count" }
+                    Cell { "Last" }
+                    Cell { "Min" }
+                    Cell { "Max" }
+                    Cell { "Avg" }
+                    Cell { "Freq" }
+                    Cell { "Throughput" }
+                    Cell { "Jitter" }
                 }
                 tr {
-                    th {
-                        class: "p-2",
-                        ""
-                    }
-                    th {
-                        class: "p-2",
-                        ""
-                    }
-                    th {
-                        class: "p-2",
-                        "(ms)"
-                    }
-                    th {
-                        class: "p-2",
-                        "(ms)"
-                    }
-                    th {
-                        class: "p-2",
-                        "(ms)"
-                    }
-                    th {
-                        class: "p-2",
-                        "(ms)"
-                    }
-                    th {
-                        class: "p-2",
-                        "(Hz)"
-                    }
-                    th {
-                        class: "p-2",
-                        "(Hz)"
-                    }
-                    th {
-                        class: "p-2",
-                        "%"
-                    }
+                    Cell { "" }
+                    Cell { "" }
+                    Cell { "(ms)" }
+                    Cell { "(ms)" }
+                    Cell { "(ms)" }
+                    Cell { "(ms)" }
+                    Cell { "(Hz)" }
+                    Cell { "(Hz)" }
+                    Cell { "%" }
                 }
             }
             tbody {
@@ -103,3 +49,18 @@ pub(crate) fn Stats(cx: Scope<StatsProps>) -> Element {
         }
     })
 }
+
+#[derive(Props)]
+struct CellProps<'a> {
+    children: Element<'a>,
+}
+
+fn Cell<'a>(cx: Scope<'a, CellProps<'a>>) -> Element {
+    cx.render(rsx!(
+        th {
+            class: "p-2",
+            &cx.props.children
+        }
+    ))
+}
+
