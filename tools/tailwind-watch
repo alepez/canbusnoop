@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+main() {
+  . ~/.nvm/nvm.sh
+  nvm use lts/iron || exit 1
+  npx tailwindcss -i ./input.css -o ./public/tailwind.css --watch
+}
+
+main
