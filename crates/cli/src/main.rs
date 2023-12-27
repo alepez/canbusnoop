@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use canbusnoop_bus::{CanBusReader, Config};
+use canbusnoop_interface::{CanBusReader, Config};
 use canbusnoop_core::Frame;
 use canbusnoop_ui::launch;
 use clap::Parser;

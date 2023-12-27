@@ -1,9 +1,9 @@
 [package]
-name = "canbusnoop-bus"
+name = "canbusnoop-interface"
 version = "0.1.0"
 authors = ["Alessandro Pezzato <alessandro@pezzato.net>"]
 edition = "2021"
-description = "CAN bus sniffer - bus connection library"
+description = "CAN bus sniffer - can bus interface library"
 homepage = "https://github.com/alepez/canbusnoop"
 repository = "https://github.com/alepez/canbusnoop"
 license = "MIT/Apache-2.0"

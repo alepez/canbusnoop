@@ -323,31 +323,15 @@ dependencies = [
 name = "canbusnoop"
 version = "0.1.0"
 dependencies = [
- "canbusnoop-bus",
  "canbusnoop-core",
  "canbusnoop-db",
+ "canbusnoop-interface",
  "canbusnoop-ui",
  "clap",
  "env_logger",
  "futures-channel",
  "futures-util",
  "log",
- "tokio",
- "tokio-socketcan",
- "tokio-stream",
- "tokio-util",
-]
-
-[[package]]
-name = "canbusnoop-bus"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "canbusnoop-core",
- "futures-util",
- "log",
- "oorandom",
- "thiserror",
  "tokio",
  "tokio-socketcan",
  "tokio-stream",
@@ -367,12 +351,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "canbusnoop-interface"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "canbusnoop-core",
+ "futures-util",
+ "log",
+ "oorandom",
+ "thiserror",
+ "tokio",
+ "tokio-socketcan",
+ "tokio-stream",
+ "tokio-util",
+]
+
+[[package]]
 name = "canbusnoop-ui"
 version = "0.1.0"
 dependencies = [
- "canbusnoop-bus",
  "canbusnoop-core",
  "canbusnoop-db",
+ "canbusnoop-interface",
  "colorsys",
  "dioxus",
  "dioxus-desktop",

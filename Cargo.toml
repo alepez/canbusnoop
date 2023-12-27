@@ -18,7 +18,7 @@ name = "canbusnoop"
 
 [workspace]
 members = [
-  "crates/bus",
+  "crates/interface",
   "crates/core",
   "crates/db",
   "crates/ui",
@@ -32,7 +32,7 @@ tokio-stream = { version = "0.1" }
 tokio-util = { version = "0.7", features = ["codec"] }
 log = "0.4"
 env_logger = "0.10"
-canbusnoop-bus = { path = "crates/bus" }
+canbusnoop-interface = { path = "crates/interface" }
 canbusnoop-core = { path = "crates/core" }
 canbusnoop-db = { path = "crates/db" }
 canbusnoop-ui = { path = "crates/ui" }
