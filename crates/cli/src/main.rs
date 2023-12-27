@@ -63,6 +63,6 @@ fn setup_env_logger() {
 #[command(author, version, about, long_about = None)]
 struct Cli {
     /// CAN bus interface
-    #[arg(short = 'i', long, default_value = "can0")]
+    #[arg(short = 'i', long, default_value = "demo")]
     can_interface: String,
 }
