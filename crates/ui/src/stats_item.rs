@@ -95,7 +95,7 @@ impl From<&Stats> for StatsStrings {
         };
 
         let throughput = stats.throughput();
-        let throughput = format!("{:.2}", throughput);
+        let throughput = throughput.map(|x| format!("{:.2}", x)).unwrap_or_default();
 
         let period_jitter = stats.period_jitter() * 100.;
         let period_jitter = format!("{:.2}", period_jitter);

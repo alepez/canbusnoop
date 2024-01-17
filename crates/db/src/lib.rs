@@ -12,7 +12,7 @@ pub struct Stats {
     min_period: Option<Duration>,
     max_period: Option<Duration>,
     avg_period: Option<Duration>,
-    throughput: f64,
+    throughput: Option<f64>,
     period_history: VecDeque<Duration>,
     period_jitter: f64,
 }
@@ -38,7 +38,7 @@ impl Stats {
         self.avg_period
     }
 
-    pub fn throughput(&self) -> f64 {
+    pub fn throughput(&self) -> Option<f64> {
         self.throughput
     }
 
@@ -57,7 +57,7 @@ impl Default for Stats {
             min_period: Default::default(),
             max_period: Default::default(),
             avg_period: Default::default(),
-            throughput: 0.,
+            throughput: Default::default(),
             period_history: Default::default(),
             period_jitter: 0.,
         }
@@ -80,7 +80,7 @@ impl Display for Stats {
                 .map(|x| x.as_secs_f64())
                 .and_then(|s| if s != 0. { Some(1. / (s as f64)) } else { None })
                 .unwrap_or_default(),
-            self.throughput,
+            self.throughput.map(|x| x.to_string()).unwrap_or_default(),
             self.period_jitter * 100.,
         )
     }
@@ -125,11 +125,12 @@ impl Stats {
             }
         }
 
+        // Calculate throughput: messages per second
+        // This is calculated only when a message is received
         let time_since_start = now - self.started_at;
         self.throughput = match self.count {
-            0 => 0.,
-            1 => 1.,
-            _ => self.count as f64 / time_since_start.as_secs_f64(),
+            0 | 1 => None,
+            _ => Some(self.count as f64 / time_since_start.as_secs_f64()),
         };
 
         self.period_jitter = calculate_jitter(self.period_history.iter());
