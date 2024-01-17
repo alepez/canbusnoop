@@ -42,6 +42,10 @@ fn App(cx: Scope<AppProps>) -> Element {
         }
     });
 
+    let clear = || {
+        stats.write().clear();
+    };
+
     let count = stats.read().count();
     let stats: MultiStats = stats.read().clone();
 
@@ -52,6 +56,7 @@ fn App(cx: Scope<AppProps>) -> Element {
     };
 
     render! {
+        button { onclick: move |_event| { clear() }, "Clear" }
         div {
             "Total: {count}"
         }

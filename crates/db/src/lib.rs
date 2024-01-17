@@ -169,6 +169,11 @@ impl MultiStats {
     pub fn into_iter(self) -> impl Iterator<Item = (u32, Stats)> {
         self.stats.into_iter()
     }
+
+    pub fn clear(&mut self) {
+        self.total_count = 0;
+        self.stats.clear();
+    }
 }
 
 impl Display for MultiStats {
