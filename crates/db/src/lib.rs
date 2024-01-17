@@ -128,9 +128,10 @@ impl Stats {
         // Calculate throughput: messages per second
         // This is calculated only when a message is received
         let time_since_start = now - self.started_at;
+        let secs_since_start = time_since_start.as_secs_f64();
         self.throughput = match self.count {
             0 | 1 => None,
-            _ => Some(self.count as f64 / time_since_start.as_secs_f64()),
+            _ => Some(self.count as f64 / secs_since_start),
         };
 
         self.period_jitter = calculate_jitter(self.period_history.iter());
