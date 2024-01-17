@@ -18,14 +18,14 @@ pub(crate) fn StatsItem(cx: Scope<StatsItemProps>) -> Element {
     render! {
         Row {
             Cell { ColoredId { id: id } }
-            Cell { stats_str.count }
-            Cell { stats_str.last_period }
-            Cell { stats_str.min_period }
-            Cell { stats_str.max_period }
-            Cell { stats_str.avg_period }
-            Cell { stats_str.avg_freq }
-            Cell { stats_str.throughput }
-            Cell { stats_str.period_jitter }
+            Cell { CellValue { value: stats_str.count } }
+            Cell { CellValue { value: stats_str.last_period } }
+            Cell { CellValue { value: stats_str.min_period } }
+            Cell { CellValue { value: stats_str.max_period } }
+            Cell { CellValue { value: stats_str.avg_period } }
+            Cell { CellValue { value: stats_str.avg_freq } }
+            Cell { CellValue { value: stats_str.throughput } }
+            Cell { CellValue { value: stats_str.period_jitter } }
         }
     }
 }
@@ -109,6 +109,18 @@ impl From<&Stats> for StatsStrings {
             throughput,
             period_jitter,
             avg_freq,
+        }
+    }
+}
+
+#[component]
+fn CellValue(cx: Scope, value: String) -> Element {
+    // This is needed to make sure the cell has a fixed width, otherwise the table
+    // will flicker when the value changes.
+    render! {
+        div {
+            class: "w-8",
+            "{value}"
         }
     }
 }
