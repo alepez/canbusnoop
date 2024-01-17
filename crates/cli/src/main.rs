@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
-use canbusnoop_interface::{CanBusReader, Config};
 use canbusnoop_core::Frame;
+use canbusnoop_interface::{CanBusReader, Config};
 use canbusnoop_ui::launch;
 use clap::Parser;
 use futures_channel::mpsc::{unbounded, UnboundedSender};
