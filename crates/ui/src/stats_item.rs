@@ -36,12 +36,30 @@ fn fmt_period(x: Duration) -> String {
 }
 
 /// Translate a nibble (0-16) to a color hex string
-fn nibble_to_color(byte: u8) -> String {
+fn nibble_to_color(byte: u8) -> Rgb {
     let h = byte as f64 / 16. * (360. / 16.0 * 15.0);
     let s = 100.;
     let l = 50.;
     let color = Hsl::new(h, s, l, None);
-    Rgb::from(color).to_hex_string()
+    Rgb::from(color)
+}
+
+fn luminance(c: &Rgb) -> f64 {
+    const R_YUV_FACTOR: f64 = 0.299;
+    const G_YUV_FACTOR: f64 = 0.587;
+    const B_YUV_FACTOR: f64 = 0.114;
+    let r = c.red() * R_YUV_FACTOR;
+    let g = c.green() * G_YUV_FACTOR;
+    let b = c.blue() * B_YUV_FACTOR;
+    r + g + b
+}
+
+fn text_color_from_bg(bg: &Rgb) -> Rgb {
+    if luminance(bg) > 50. {
+        Rgb::new(0., 0., 0., None)
+    } else {
+        Rgb::new(255., 255., 255., None)
+    }
 }
 
 struct StatsStrings {
@@ -111,12 +129,17 @@ fn ColoredId(cx: Scope, id: u32) -> Element {
 
 #[component]
 fn ColoredNibble(cx: Scope, nibble: u8) -> Element {
-    let color = nibble_to_color(*nibble);
+    let bg_color = nibble_to_color(*nibble);
+    let fg_color = text_color_from_bg(&bg_color);
     let nibble = format!("{:01X}", nibble);
+
+    let bg_color = bg_color.to_hex_string();
+    let fg_color = fg_color.to_hex_string();
 
     render! {
         span {
-            background_color: "{color}",
+            background_color: "{bg_color}",
+            color: "{fg_color}",
             padding: "0.2em",
             nibble
         }
