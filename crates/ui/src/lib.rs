@@ -12,6 +12,7 @@ use futures::StreamExt;
 use stats::Stats;
 use std::cell::Cell;
 use widgets::Button;
+use crate::widgets::TextInput;
 
 struct AppProps {
     rx_receiver: Cell<Option<UnboundedReceiver<Frame>>>,
@@ -66,15 +67,17 @@ fn App(cx: Scope<AppProps>) -> Element {
             "Total: {count}"
         }
         div {
-          div { "filter" }
-          input {
+          TextInput {
             value: "{can_id_filter}",
-            oninput: move |evt| can_id_filter.set(evt.value.clone()),
+            label: "Filter",
+            placeholder: "Filter",
+            on_input: move |evt: Event<FormData>| can_id_filter.set(evt.value.clone()),
           }
-          div { "mask" }
-          input {
+          TextInput {
             value: "{can_id_mask}",
-            oninput: move |evt| can_id_mask.set(evt.value.clone()),
+            label: "Mask",
+            placeholder: "Mask",
+            on_input: move |evt: Event<FormData>| can_id_mask.set(evt.value.clone()),
           }
         }
         Stats {
