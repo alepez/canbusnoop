@@ -2,6 +2,7 @@
 
 mod stats;
 mod stats_item;
+mod widgets;
 
 use canbusnoop_core::Frame;
 use canbusnoop_db::MultiStats;
@@ -10,6 +11,7 @@ use dioxus_desktop::Config;
 use futures::StreamExt;
 use stats::Stats;
 use std::cell::Cell;
+use widgets::Button;
 
 struct AppProps {
     rx_receiver: Cell<Option<UnboundedReceiver<Frame>>>,
@@ -56,7 +58,10 @@ fn App(cx: Scope<AppProps>) -> Element {
     };
 
     render! {
-        button { onclick: move |_event| { clear() }, "Clear" }
+        Button {
+            on_click: move |_| { clear() },
+            "Clear"
+        }
         div {
             "Total: {count}"
         }
