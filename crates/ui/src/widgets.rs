@@ -14,7 +14,7 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element<'a> {
     render! {
         button {
             onclick: move |evt| cx.props.on_click.call(evt),
-            class: "bg-teal-400 rounded-lg px-4 py-2 text-white",
+            class: "btn",
             &cx.props.children
         }
     }
